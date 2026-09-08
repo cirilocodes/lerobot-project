@@ -1,0 +1,20 @@
+robot:
+  type: so101_mujoco        # becomes so101_follower when hardware arrives
+  port: null                # becomes COM3 or similar
+
+env:
+  id: MuJoCoPickLift-v1
+  render_mode: human        # rgb_array for video and training rollouts
+  seed: 0
+  step_delay: 0.01          # viewer pacing; 0 for headless speed
+
+recording:
+  fps: 30
+  episodes: 30
+  task: "pick up the cube"
+
+training:
+  policy: act
+  steps: 20000
+  batch_size: 8
+  output_dir: outputs/act_run_01
