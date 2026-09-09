@@ -81,7 +81,7 @@ RETREAT_HEIGHT = 0.20      # how high to back off afterwards
 IK_DAMPING = 0.08          # larger = more stable, slower
 IK_ITERS = 6               # IK refinement steps per control step
 MAX_STEP = 0.02
-MAX_STEP_CARRY = 0.008     # slower once holding the cube            # max joint change per control step (rad)
+MAX_STEP_CARRY = 0.02     # slower once holding the cube            # max joint change per control step (rad)
 POS_TOL = 0.006            # "arrived" tolerance (m)
 
 PHASE_TIMEOUT = 500        # control steps before giving up on a phase
@@ -266,7 +266,7 @@ def run_episode(env, seed, render=False, collect=False):
 
 
 def test_gripper():
-    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="rgb_array")
+    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="rgb_array", max_episode_steps=4000)
     print("Testing which gripper value opens vs closes.\n")
 
     for label, val in [("min (-0.1745)", -0.1745), ("max (1.7453)", 1.7453)]:
@@ -288,14 +288,14 @@ def test_gripper():
 
 
 def demo(seed):
-    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="human")
+    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="human", max_episode_steps=4000)
     ok, _, _ = run_episode(env, seed, render=True)
     print(f"\n  seed {seed}: success = {ok}")
     env.close()
 
 
 def batch(episodes):
-    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="rgb_array")
+    env = gym.make("MuJoCoPickLift-v1", config=CFG, render_mode="rgb_array", max_episode_steps=4000)
     wins = 0
     for s in range(episodes):
         ok, _, _ = run_episode(env, s)
