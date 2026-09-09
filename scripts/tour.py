@@ -20,7 +20,7 @@ for env_id in ENV_IDS:
     for _ in range(300):
         obs, reward, terminated, truncated, info = env.step(env.action_space.sample())
         env.render()
-        time.sleep(0.02)
+        time.sleep(0.05)
         if terminated or truncated:
             obs, info = env.reset()
 
