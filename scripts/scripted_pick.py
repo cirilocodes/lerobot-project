@@ -304,6 +304,25 @@ def batch(episodes):
     print(f"\n=== {wins}/{episodes} = {100*wins/episodes:.1f}% success ===")
     env.close()
 
+def watch(start, count, pause=1.0):
+    """Run episodes one after another in the viewer, with a running tally."""
+    env = gym.make("MuJoCoPickLift-v1", config=CFG,
+                   render_mode="human", max_episode_steps=4000)
+    wins = 0
+    try:
+        for i in range(count):
+            seed = start + i
+            print(f"\n--- seed {seed} ({i+1}/{count}) ---")
+            ok, _, _ = run_episode(env, seed, render=True)
+            wins += int(ok)
+            print(f"  {'SUCCESS' if ok else 'FAIL'}    running {wins}/{i+1}"
+                  f"  ({100*wins/(i+1):.0f}%)")
+            time.sleep(pause)
+    except KeyboardInterrupt:
+        print("\nStopped by user.")
+    finally:
+        env.close()
+    print(f"\n=== {wins}/{count} ===")
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
@@ -312,7 +331,11 @@ if __name__ == "__main__":
     p.add_argument("--batch", action="store_true")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--episodes", type=int, default=20)
+    p.add_argument("--watch", action="store_true")
+    p.add_argument("--start", type=int, default=0)
+    p.add_argument("--pause", type=float, default=1.0)
     a = p.parse_args()
+
 
     if a.test_gripper:
         test_gripper()
@@ -320,5 +343,7 @@ if __name__ == "__main__":
         demo(a.seed)
     elif a.batch:
         batch(a.episodes)
+    elif a.watch:
+        watch(a.start, a.episodes, a.pause)
     else:
         print("Pick one: --test-gripper | --demo | --batch")
